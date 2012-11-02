@@ -1,0 +1,53 @@
+#
+# user.ignore (RedHat)
+#
+# Speed up lookups for common users who we know aren't in AD
+#
+# These values are controlled via group policy under 
+#   CentrifyDC Settings->Login Settings->Users to Ignore (Lookup)
+#
+# The syntax is
+#
+# user_name
+#
+root
+bin
+daemon
+adm
+lp
+sync
+shutdown
+halt
+mail
+news
+uucp
+operator
+games
+gopher
+ftp
+nobody
+rpm
+vcsa
+nscd
+sshd
+rpc
+rpcuser
+nfsnobody
+mailnull
+smmsp
+pcap
+apache
+squid
+webalizer
+xfs
+named
+ntp
+gdm
+canna
+desktop
+
+<% if has_variable?("users_ignore") then -%>
+<% users_ignore.each do |val| -%>
+<%= val %>
+<% end -%>
+<% end -%>

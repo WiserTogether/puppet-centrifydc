@@ -58,49 +58,42 @@ class centrifydc($domain = "vagrantup.com") {
         require => Exec['adjoin'],
     }
     
-    # Identify Ubuntu server and workstation machines by their kernel type
-    case $kernelrelease {
-	    /(server)$/: 
-	    { 
-	    	# Give the servers configuration that restricts logins to specific users and groups
-	    	file { "/etc/centrifydc/centrifydc.conf":
-				owner  => root,
-				group  => root,
-				mode   => 644,
-				source => "puppet:///modules/centrifydc/server_centrifydc.conf",
-                                replace => false,
-				require => Package["centrifydc"]
-			}
-		
-			# Additional users read from $users_allow array variable
-			file { "/etc/centrifydc/users.allow":
-				owner  => root,
-				group  => root,
-				mode   => 644,
-				content => template("centrifydc/server_users.allow.erb"),
-				require => Package["centrifydc"]
-			} 
-			
-			# Additional groups read from $groups_allow array variable
-			file { "/etc/centrifydc/groups.allow":
-				owner  => root,
-				group  => root,
-				mode   => 644,
-				content => template("centrifydc/server_groups.allow.erb"),
-				require => Package["centrifydc"]
-			} 
-   		} 
-	    default: 
-	    {	
-	    	# Use the default Centrify config
-	    	file { "/etc/centrifydc/centrifydc.conf":
-				owner  => root,
-				group  => root,
-				mode   => 644,
-				source => "puppet:///modules/centrifydc/workstation_centrifydc.conf",
-				require => Package[$centrifydc_package_name]
-			}  
-		} 
+    # Give the servers configuration that restricts logins to specific users and groups
+    file { "/etc/centrifydc/centrifydc.conf":
+      owner  => root,
+      group  => root,
+      mode   => 644,
+      content  => template("centrifydc/centrifydc.conf.erb"),
+      replace => false,
+      require => Package[$centrifydc_package_name]
+    }
+  
+    # Additional users read from $users_allow array variable
+    file { "/etc/centrifydc/users.allow":
+      owner  => root,
+      group  => root,
+      mode   => 644,
+      content => template("centrifydc/_users.allow.erb"),
+      require => Package[$centrifydc_package_name]
+    } 
+    
+    # Additional groups read from $groups_allow array variable
+    file { "/etc/centrifydc/groups.allow":
+      owner  => root,
+      group  => root,
+      mode   => 644,
+      content => template("centrifydc/groups.allow.erb"),
+      require => Package[$centrifydc_package_name]
+    } 
+
+    # Additional users to ignore read from $users_ignore array variable
+    file { "/etc/centrifydc/users.ignore":
+      owner  => root,
+      group  => root,
+      mode   => 644,
+      content => template("centrifydc/users.ignore.erb"),
+      require => Package[$centrifydc_package_name]
+    } 
 	}
         
         
