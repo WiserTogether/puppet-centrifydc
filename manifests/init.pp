@@ -36,6 +36,7 @@ class centrifydc($domain = "vagrantup.com") {
 			}
 		}
 	}
+
 	# This is only executed once when the package is installed.
 	# It requires "adjoin -w -P -n [new machine name] -u [administrator account] domain" from the
 	# puppetmaster to pre-create the machine's account. Do this at the same time you sign
@@ -73,7 +74,7 @@ class centrifydc($domain = "vagrantup.com") {
       owner  => root,
       group  => root,
       mode   => 644,
-      content => template("centrifydc/_users.allow.erb"),
+      content => template("centrifydc/users.allow.erb"),
       require => Package[$centrifydc_package_name]
     } 
     
@@ -94,43 +95,24 @@ class centrifydc($domain = "vagrantup.com") {
       content => template("centrifydc/users.ignore.erb"),
       require => Package[$centrifydc_package_name]
     } 
-	}
-        
         
 	# Make sure service is running and is restarted if configuration files are updated
-    case $kernelrelease {
-	    /(server)$/: 
-	    {
-			service { centrifydc:
-			        ensure  => running,
-			        require => [
-			        	Package[$centrifydc_package_name],
-			        	File["/etc/centrifydc/centrifydc.conf"], 
-			        	File["/etc/centrifydc/users.allow"],
-			        	File["/etc/centrifydc/groups.allow"],
-			        ],
-			        subscribe => [ 
-			        	File["/etc/centrifydc/centrifydc.conf"], 
-			        	File["/etc/centrifydc/users.allow"], 
-			        	File["/etc/centrifydc/groups.allow"], 
-			        	Package[$centrifydc_package_name] 
-			        ]
-			}
-	   }
-	   default:
-	   {
-		   	service { centrifydc:
-			        ensure  => running,
-			        hasstatus => false,
-			        pattern => 'adclient',
-			        require => [Package[$centrifydc_package_name],
-			        			File["/etc/centrifydc/centrifydc.conf"]],
-			        subscribe => [ 
-			        	File["/etc/centrifydc/centrifydc.conf"], 
-			        	Package[$centrifydc_package_name] 
-			        ]
-			}
-	    }
+  service { centrifydc:
+        ensure  => running,
+        hasstatus => false,
+        pattern => 'adclient',
+        require => [Package[$centrifydc_package_name],
+              File["/etc/centrifydc/centrifydc.conf"]
+              File["/etc/centrifydc/users.ignore"], 
+              File["/etc/centrifydc/users.allow"],
+              File["/etc/centrifydc/groups.allow"],
+              ],
+        subscribe => [ 
+          Package[$centrifydc_package_name],
+          File["/etc/centrifydc/centrifydc.conf"], 
+          File["/etc/centrifydc/users.ignore"], 
+          File["/etc/centrifydc/users.allow"],
+          File["/etc/centrifydc/groups.allow"],
+        ],
 	}
-
 }
