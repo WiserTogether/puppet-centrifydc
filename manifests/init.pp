@@ -2,7 +2,12 @@
 # Puppet manifest for Centrify Express
 #
 
-class centrifydc($domain = "vagrantup.com") {
+class centrifydc(
+  $domain = "vagrantup.com",
+  $users_ignore = [],
+  $users_allow = [],
+  $groups_allow = [] ,
+) {
 
 	$centrifydc_package_name = $operatingsystem ? {
         redhat  => "CentrifyDC",
