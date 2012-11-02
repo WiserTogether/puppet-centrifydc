@@ -101,12 +101,13 @@ class centrifydc($domain = "vagrantup.com") {
         ensure  => running,
         hasstatus => false,
         pattern => 'adclient',
-        require => [Package[$centrifydc_package_name],
-              File["/etc/centrifydc/centrifydc.conf"]
-              File["/etc/centrifydc/users.ignore"], 
-              File["/etc/centrifydc/users.allow"],
-              File["/etc/centrifydc/groups.allow"],
-              ],
+        require => [
+          Package[$centrifydc_package_name],
+          File["/etc/centrifydc/centrifydc.conf"],
+          File["/etc/centrifydc/users.ignore"], 
+          File["/etc/centrifydc/users.allow"],
+          File["/etc/centrifydc/groups.allow"],
+        ],
         subscribe => [ 
           Package[$centrifydc_package_name],
           File["/etc/centrifydc/centrifydc.conf"], 
