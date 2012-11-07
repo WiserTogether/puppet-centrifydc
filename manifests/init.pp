@@ -4,7 +4,7 @@
 
 class centrifydc(
   $domain = "vagrantup.com",
-  $users_ignore = [],
+  $user_ignore = [],
   $users_allow = [],
   $groups_allow = [] ,
 ) {
@@ -92,12 +92,12 @@ class centrifydc(
       require => Package[$centrifydc_package_name]
     } 
 
-    # Additional users to ignore read from $users_ignore array variable
-    file { "/etc/centrifydc/users.ignore":
+    # Additional users to ignore read from $user_ignore array variable
+    file { "/etc/centrifydc/user.ignore":
       owner  => root,
       group  => root,
       mode   => 644,
-      content => template("centrifydc/users.ignore.erb"),
+      content => template("centrifydc/user.ignore.erb"),
       require => Package[$centrifydc_package_name]
     } 
         
@@ -109,14 +109,14 @@ class centrifydc(
         require => [
           Package[$centrifydc_package_name],
           File["/etc/centrifydc/centrifydc.conf"],
-          File["/etc/centrifydc/users.ignore"], 
+          File["/etc/centrifydc/user.ignore"],
           File["/etc/centrifydc/users.allow"],
           File["/etc/centrifydc/groups.allow"],
         ],
         subscribe => [ 
           Package[$centrifydc_package_name],
           File["/etc/centrifydc/centrifydc.conf"], 
-          File["/etc/centrifydc/users.ignore"], 
+          File["/etc/centrifydc/user.ignore"],
           File["/etc/centrifydc/users.allow"],
           File["/etc/centrifydc/groups.allow"],
         ],
