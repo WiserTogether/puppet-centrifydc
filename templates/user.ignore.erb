@@ -45,8 +45,7 @@ ntp
 gdm
 canna
 desktop
-
-<% if has_variable?("users_ignore") then -%>
+<% if has_variable?("user_ignore") then -%>
 <% users_ignore.each do |val| -%>
 <%= val %>
 <% end -%>
