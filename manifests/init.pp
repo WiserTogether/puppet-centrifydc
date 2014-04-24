@@ -52,7 +52,8 @@ class centrifydc(
         command => "adjoin -w -S ${domain}",
         onlyif => 'adinfo | grep "Not joined to any domain"',
         logoutput => true,
-        notify => Exec["addns"]
+        notify => Exec["addns"],
+        require => Package[$centrifydc_package_name]
     }
     
     # Update Active Directory DNS servers with host name
