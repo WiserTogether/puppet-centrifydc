@@ -23,9 +23,9 @@ class centrifydc(
 			package { $centrifydc_package_name:
 				ensure => installed,
 				provider => rpm, 
-				source => "/var/cache/site-packages/centrifydc/centrifydc-5.0.2-rhel3-x86_64.rpm",
+				source => "/var/cache/site-packages/centrifydc/centrifydc-5.1.3-rhel3-x86_64.rpm",
 				notify => Exec["adjoin"],
-				require => File['/var/cache/site-packages/centrifydc/centrifydc-5.0.2-rhel3-x86_64.rpm']
+				require => File['/var/cache/site-packages/centrifydc/centrifydc-5.1.3-rhel3-x86_64.rpm']
 			}  
                         package { "CentrifyDC-openssh":
 				ensure => absent,
